@@ -1,0 +1,40 @@
+
+server:
+  port: 8011
+  servlet:
+    context-path: /wx_order
+
+spring:
+  application:
+    name: service-test
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://47.107.47.13:3306/wx_order?serverTimezone=GMT%2B8&useUnicode=true&characterEncoding=utf-8&useSSL=false
+    username: root
+    password: MylikeKq@88
+    dbcp2:
+      max-idle: 10
+      max-wait-millis: 100000
+      min-idle: 5
+      initial-size: 5
+    tomcat:
+      max-wait: 10000
+      validation-query: SELECT 1
+      test-on-borrow: false
+      test-while-idle: true
+      time-between-eviction-runs-millis: 18800
+    #      WebStatFilter:
+    #        exclusions: "*.js,*.gif,*.jpg,*.png,*.css,*.ico,/druid/*"
+    #      stat-view-servlet:
+    #       login-username: admin
+    #       login-password: admin
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://47.107.47.13:8761/eureka/
+mybatis:
+  type-aliases-package: com.wx_shop.servicetest.entity
+  mapper-locations: classpath:mapper/*.xml
+logging:
+  level:
+    com.wx_shop.servicetest.dao: debug

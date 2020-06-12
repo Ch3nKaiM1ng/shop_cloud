@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wx_shop.serviceshop.dao.SysUserDao">
+
+    <resultMap type="com.wx_shop.serviceshop.entity.SysUser" id="SysUserMap">
+        <result property="id" column="id" jdbcType="INTEGER"/>
+        <result property="name" column="name" jdbcType="VARCHAR"/>
+        <result property="password" column="password" jdbcType="VARCHAR"/>
+        <result property="type" column="type" jdbcType="INTEGER"/>
+        <result property="shopId" column="shop_id" jdbcType="INTEGER"/>
+        <result property="ctime" column="ctime" jdbcType="TIMESTAMP"/>
+        <result property="headImg" column="head_img" jdbcType="VARCHAR"/>
+        <result property="realName" column="real_name" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <!--查询单个-->
+    <select id="queryById" resultMap="SysUserMap">
+        select
+          id, name, password, type, shop_id, ctime, head_img, real_name
+        from wx_shop.sys_user
+        where id = #{id}
+    </select>
+
+    <!--查询指定行数据-->
+    <select id="queryAllByLimit" resultMap="SysUserMap">
+        select
+          id, name, password, type, shop_id, ctime, head_img, real_name
+        from wx_shop.sys_user
+        limit #{offset}, #{limit}
+    </select>
+
+    <!--通过实体作为筛选条件查询-->
+    <select id="queryAll" resultMap="SysUserMap">
+        select
+          id, name, password, type, shop_id, ctime, head_img, real_name
+        from wx_shop.sys_user
+        <where>
+            <if test="id != null">
+                and id = #{id}
+            </if>
+            <if test="notId != null">
+                and id != #{notId}
+            </if>
+            <if test="name != null and name != ''">
+                and name = #{name}
+            </if>
+            <if test="password != null and password != ''">
+                and password = #{password}
+            </if>
+            <if test="type != null and type != ''">
+                and type = #{type}
+            </if>
+            <if test="shopId != null">
+                and shop_id = #{shopId}
+            </if>
+            <if test="ctime != null">
+                and ctime = #{ctime}
+            </if>
+            <if test="headImg != null and headImg != ''">
+                and head_img = #{headImg}
+            </if>
+            <if test="realName != null and realName != ''">
+                and real_name = #{realName}
+            </if>
+        </where>
+    </select>
+    
+    <select id="queryObj" resultMap="SysUserMap">
+        select
+          id, name, password, type, shop_id, ctime, head_img, real_name
+        from wx_shop.sys_user
+        <where>
+            <if test="id != null">
+                and id = #{id}
+            </if>
+            <if test="name != null and name != ''">
+                and name = #{name}
+            </if>
+            <if test="password != null and password != ''">
+                and password = #{password}
+            </if>
+            <if test="type != null and type != ''">
+                and type = #{type}
+            </if>
+            <if test="shopId != null">
+                and shop_id = #{shopId}
+            </if>
+            <if test="ctime != null">
+                and ctime = #{ctime}
+            </if>
+            <if test="headImg != null and headImg != ''">
+                and head_img = #{headImg}
+            </if>
+            <if test="realName != null and realName != ''">
+                and real_name = #{realName}
+            </if>
+        </where>
+    </select>
+    <!--新增所有列-->
+    <insert id="insert" keyProperty="id" useGeneratedKeys="true">
+        insert into wx_shop.sys_user(name, password, type, shop_id, ctime, head_img, real_name)
+        values (#{name}, #{password}, #{type}, #{shopId}, now(), #{headImg}, #{realName})
+    </insert>
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update wx_shop.sys_user
+        <set>
+            <if test="name != null and name != ''">
+                name = #{name},
+            </if>
+            <if test="password != null and password != ''">
+                password = #{password},
+            </if>
+            <if test="type != null and type != ''">
+                type = #{type},
+            </if>
+            <if test="shopId != null">
+                shop_id = #{shopId},
+            </if>
+            <if test="ctime != null">
+                ctime = #{ctime},
+            </if>
+            <if test="headImg != null and headImg != ''">
+                head_img = #{headImg},
+            </if>
+            <if test="realName != null and realName != ''">
+                real_name = #{realName},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <!--通过主键删除-->
+    <delete id="deleteById">
+        delete from wx_shop.sys_user where id = #{id}
+    </delete>
+
+</mapper>

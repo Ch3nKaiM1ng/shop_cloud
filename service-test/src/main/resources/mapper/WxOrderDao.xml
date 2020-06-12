@@ -1,0 +1,368 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wx_shop.servicetest.dao.WxOrderDao">
+
+    <resultMap type="com.wx_shop.servicetest.entity.WxOrder" id="WxOrderMap">
+        <result property="orderId" column="order_id" jdbcType="INTEGER"/>
+        <result property="userId" column="user_id" jdbcType="INTEGER"/>
+        <result property="doctorId" column="doctor_id" jdbcType="INTEGER"/>
+        <result property="phone" column="phone" jdbcType="VARCHAR"/>
+        <result property="openid" column="openid" jdbcType="VARCHAR"/>
+        <result property="orderNum" column="order_num" jdbcType="INTEGER"/>
+        <result property="ordertype" column="ordertype" jdbcType="INTEGER"/>
+        <result property="state" column="state" jdbcType="INTEGER"/>
+        <result property="ctime" column="ctime" jdbcType="TIMESTAMP"/>
+        <result property="arriveTime" column="arrive_time" jdbcType="TIMESTAMP"/>
+        <result property="appointmentTime" column="appointment_time" jdbcType="TIMESTAMP"/>
+        <result property="comeTime" column="come_time" jdbcType="TIMESTAMP"/>
+        <result property="nickname" column="nickname" jdbcType="VARCHAR"/>
+        <result property="isuse" column="isuse" jdbcType="VARCHAR"/>
+        <result property="isjump" column="isjump" jdbcType="INTEGER"/>
+        <association property="doctorData"  select="com.wx_shop.servicetest.dao.DoctorDao.queryById" column="{id=doctor_id}">
+        </association>
+    </resultMap>
+
+    <resultMap type="com.wx_shop.servicetest.entity.WxOrder" id="WxOrderObj">
+        <result property="orderId" column="order_id" jdbcType="INTEGER"/>
+        <result property="userId" column="user_id" jdbcType="INTEGER"/>
+        <result property="doctorId" column="doctor_id" jdbcType="INTEGER"/>
+        <result property="phone" column="phone" jdbcType="VARCHAR"/>
+        <result property="openid" column="openid" jdbcType="VARCHAR"/>
+        <result property="orderNum" column="order_num" jdbcType="INTEGER"/>
+        <result property="ordertype" column="ordertype" jdbcType="INTEGER"/>
+        <result property="state" column="state" jdbcType="INTEGER"/>
+        <result property="ctime" column="ctime" jdbcType="TIMESTAMP"/>
+        <result property="appointmentTime" column="appointment_time" jdbcType="TIMESTAMP"/>
+        <result property="comeTime" column="come_time" jdbcType="TIMESTAMP"/>
+        <result property="arriveTime" column="arrive_time" jdbcType="TIMESTAMP"/>
+        <result property="nickname" column="nickname" jdbcType="VARCHAR"/>
+        <result property="isuse" column="isuse" jdbcType="VARCHAR"/>
+        <result property="isjump" column="isjump" jdbcType="INTEGER"/>
+        <association property="nowOrder"  select="checkNowOrderNum" column="{orderId=order_id,doctorId=doctor_id,state=state,orderNum=order_num}">
+        </association>
+        <association property="front"  select="countFasterThanU" column="{orderId=order_id,doctorId=doctor_id,state=state,orderNum=order_num}">
+        </association>
+        <association property="doctorData"  select="com.wx_shop.servicetest.dao.DoctorDao.queryById" column="{id=doctor_id}">
+        </association>
+    </resultMap>
+
+    <!--查询单个-->
+    <select id="queryById" resultMap="WxOrderMap">
+        select
+          order_id, user_id, phone, order_num, ctime, isuse,openid,ordertype,appointment_time,nickname,state,arrive_time,isjump,come_time,doctor_id
+        from wx_order.wx_order
+        where order_id = #{orderId}
+    </select>
+
+    <!--查询指定行数据-->
+    <select id="queryAllByLimit" resultMap="WxOrderMap">
+        select
+          order_id, user_id, phone, order_num, ctime, isuse,openid,ordertype,appointment_time,nickname,state,arrive_time,isjump,come_time,doctor_id
+        from wx_order.wx_order
+        limit #{offset}, #{limit}
+    </select>
+
+    <!--通过实体作为筛选条件查询-->
+    <select id="queryAll" resultMap="WxOrderMap">
+        select
+          order_id, user_id, phone, order_num, ctime, isuse,openid,ordertype,appointment_time,nickname,state,arrive_time,isjump,come_time,doctor_id
+        from wx_order.wx_order
+        <where>
+            <if test="orderId != null">
+                and order_id = #{orderId}
+            </if>
+            <if test="doctorId != null">
+                and doctor_id = #{doctorId}
+            </if>
+            <if test="userId != null">
+                and user_id = #{userId}
+            </if>
+            <if test="phone != null and phone != ''">
+                and phone = #{phone}
+            </if>
+            <if test="orderNum != null">
+                and order_num = #{orderNum}
+            </if>
+            <if test="ctime != null">
+                and ctime = #{ctime}
+            </if>
+            <if test="nickname != null">
+                and nickname = #{nickname}
+            </if>
+            <if test="stime != null">
+                and appointment_time &gt; #{stime}
+            </if>
+            <if test="etime != null">
+                and appointment_time &lt; #{etime}
+            </if>
+            <if test="isuse != null and isuse != ''">
+                and isuse = #{isuse}
+            </if>
+            <if test="state != null">
+                and state = #{state}
+            </if>
+            <if test="notState != null">
+                and state != #{notState}
+            </if>
+            <if test="ordertype != null">
+                and ordertype = #{ordertype}
+            </if>
+            and isuse !=1
+        </where>
+        <if test="orderby != null and orderby == 1">
+            order by appointment_time asc,arrive_time asc
+        </if>
+        <if test="orderby != null and orderby == 2">
+            order by order_num asc,arrive_time asc
+        </if>
+    </select>
+
+    <!--通过实体作为筛选条件查询-->
+    <select id="queryTopList" resultMap="WxOrderMap">
+        select
+        order_id, user_id, phone, order_num, ctime, isuse,openid,ordertype,appointment_time,nickname,state,arrive_time,isjump,come_time,doctor_id
+        from wx_order.wx_order
+        <where>
+            <if test="orderId != null">
+                and order_id = #{orderId}
+            </if>
+            <if test="userId != null">
+                and user_id = #{userId}
+            </if>
+            <if test="doctorId != null">
+                and doctor_id = #{doctorId}
+            </if>
+            <if test="phone != null and phone != ''">
+                and phone = #{phone}
+            </if>
+            <if test="orderNum != null">
+                and order_num = #{orderNum}
+            </if>
+            <if test="ctime != null">
+                and ctime = #{ctime}
+            </if>
+            <if test="isuse != null and isuse != ''">
+                and isuse = #{isuse}
+            </if>
+            <if test="ordertype != null">
+                and ordertype = #{ordertype}
+            </if>
+        </where>
+    </select>
+    <!--通过实体作为筛选条件查询-->
+    <select id="queryTopListByorderNum" resultMap="WxOrderMap">
+        select
+        order_id, user_id, phone, order_num, ctime, isuse,openid,ordertype,appointment_time,nickname,state,arrive_time,isjump,come_time,doctor_id
+        from wx_order.wx_order
+        <where>
+            <if test="state != null">
+                and state = #{state}
+            </if>
+            <if test="isuse != null and isuse != ''">
+                and isuse = #{isuse}
+            </if>
+            <if test="doctorId != null">
+                and doctor_id = #{doctorId}
+            </if>
+            <if test="stime != null">
+                and appointment_time &gt; #{stime}
+            </if>
+            <if test="etime != null">
+                and appointment_time &lt; #{etime}
+            </if>
+        </where>
+        order by order_num asc,arrive_time asc
+    </select>
+
+    <select id="countFasterThanU" resultType="java.lang.Integer">
+        select
+        count(*)
+        from wx_order.wx_order
+        where 1=1
+        and order_num &lt; #{orderNum}
+        and doctor_id=#{doctorId}
+        <if test="state != null">
+            and state = #{state}
+        </if>
+        and isuse=0
+        and DATE_FORMAT( appointment_time,'%Y-%m-%d') = DATE_FORMAT(NOW(), '%Y-%m-%d')
+        order by order_num asc,arrive_time asc
+        limit 1
+    </select>
+
+    <select id="checkNowOrderNum" resultType="java.lang.Integer">
+        select
+        order_num
+        from wx_order.wx_order
+        where 1=1
+        and isuse =0
+        and doctor_id=#{doctorId}
+        <if test="state != null">
+            and state=#{state}
+        </if>
+        and DATE_FORMAT( appointment_time,'%Y-%m-%d') = DATE_FORMAT(NOW(), '%Y-%m-%d')
+        order by order_num asc
+        limit 1
+    </select>
+
+    <select id="queryLastOne" resultMap="WxOrderMap">
+        select
+        order_id, user_id, phone, order_num, ctime, isuse,openid,ordertype,appointment_time,nickname,state,arrive_time,isjump,come_time,doctor_id
+        from wx_order.wx_order
+        <where>
+        <if test="ordertype != null">
+            and ordertype = #{ordertype}
+        </if>
+        <if test="doctorId != null">
+            and doctor_id = #{doctorId}
+        </if>
+        <if test="state != null">
+            and state = #{state}
+        </if>
+        <if test="isuse != null">
+            and isuse = #{isuse}
+        </if>
+        </where>
+        order by ctime desc
+        limit 1
+    </select>
+
+    <select id="queryLastOneByap" resultMap="WxOrderMap">
+        select
+        order_id, user_id, phone, order_num, ctime, isuse,openid,ordertype,appointment_time,nickname,state,arrive_time,isjump,come_time,doctor_id
+        from wx_order.wx_order
+        <where>
+        <if test="doctorId != null">
+            and doctor_id = #{doctorId}
+        </if>
+        <if test="state != null">
+            and state = #{state}
+        </if>
+        <if test="isuse != null">
+            and isuse = #{isuse}
+        </if>
+            and DATE_FORMAT( appointment_time,'%Y-%m-%d') = DATE_FORMAT(NOW(), '%Y-%m-%d')
+        </where>
+        order by order_num desc
+        limit 1
+    </select>
+
+    <select id="queryTopOneByap" resultMap="WxOrderMap">
+        select
+        order_id, user_id, phone, order_num, ctime, isuse,openid,ordertype,appointment_time,nickname,state,arrive_time,isjump,come_time,doctor_id
+        from wx_order.wx_order
+        <where>
+            <if test="doctorId != null">
+                and doctor_id = #{doctorId}
+            </if>
+            <if test="state != null">
+                and state = #{state}
+            </if>
+            <if test="isuse != null">
+                and isuse = #{isuse}
+            </if>
+            and DATE_FORMAT( appointment_time,'%Y-%m-%d') = DATE_FORMAT(NOW(), '%Y-%m-%d')
+        </where>
+        order by order_num asc,arrive_time asc
+        limit 1
+    </select>
+
+    <select id="queryObj" resultMap="WxOrderObj">
+        select
+          order_id, user_id, phone, order_num, ctime, isuse,openid,ordertype,appointment_time,nickname,state,arrive_time,isjump,come_time,doctor_id
+        from wx_order.wx_order
+        <where>
+            <if test="orderId != null">
+                and order_id = #{orderId}
+            </if>
+            <if test="userId != null">
+                and user_id = #{userId}
+            </if>
+            <if test="doctorId != null">
+                and doctor_id = #{doctorId}
+            </if>
+            <if test="phone != null and phone != ''">
+                and phone = #{phone}
+            </if>
+            <if test="openid != null and openid != ''">
+                and openid = #{openid}
+            </if>
+            <if test="orderNum != null">
+                and order_num = #{orderNum}
+            </if>
+            <if test="ctime != null">
+                and ctime = #{ctime}
+            </if>
+            <if test="state != null">
+                and state = #{state}
+            </if>
+            <if test="isuse != null and isuse != ''">
+                and isuse = #{isuse}
+            </if>
+            <if test="ordertype != null">
+                and ordertype = #{ordertype}
+            </if>
+        </where>
+    </select>
+    <!--新增所有列-->
+    <insert id="insert" keyProperty="orderId" useGeneratedKeys="true">
+        insert into wx_order.wx_order(user_id, phone, order_num, ctime, isuse,openid,ordertype,appointment_time,nickname,state,arrive_time,isjump,come_time,doctor_id)
+        values (#{userId}, #{phone}, #{orderNum}, now(), #{isuse},#{openid},#{ordertype},#{appointmentTime},#{nickname},#{state},#{arriveTime},0,#{comeTime},#{doctorId})
+    </insert>
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update wx_order.wx_order
+        <set>
+            <if test="userId != null">
+                user_id = #{userId},
+            </if>
+            <if test="doctorId != null">
+                doctor_id = #{doctorId},
+            </if>
+            <if test="phone != null and phone != ''">
+                phone = #{phone},
+            </if>
+            <if test="openid != null and openid != ''">
+                 openid = #{openid},
+            </if>
+            <if test="orderNum != null">
+                order_num = #{orderNum},
+            </if>
+            <if test="state != null">
+                state = #{state},
+            </if>
+            <if test="ctime != null">
+                ctime = #{ctime},
+            </if>
+            <if test="appointmentTime != null">
+                appointment_time = #{appointmentTime},
+            </if>
+            <if test="arriveTime != null">
+                arrive_time = #{arriveTime},
+            </if>
+            <if test="comeTime != null">
+                come_time = #{comeTime},
+            </if>
+            <if test="isuse != null and isuse != ''">
+                isuse = #{isuse},
+            </if>
+            <if test="isjump != null">
+                isjump = #{isjump},
+            </if>
+            <if test="nickname != null and nickname != ''">
+                nickname = #{nickname},
+            </if>
+            <if test="ordertype != null and ordertype != ''">
+                ordertype = #{ordertype},
+            </if>
+        </set>
+        where order_id = #{orderId}
+    </update>
+
+    <!--通过主键删除-->
+    <delete id="deleteById">
+        delete from wx_order.wx_order where order_id = #{orderId}
+    </delete>
+
+</mapper>

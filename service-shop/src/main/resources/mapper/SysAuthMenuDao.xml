@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wx_shop.serviceshop.dao.SysAuthMenuDao">
+
+    <resultMap type="com.wx_shop.serviceshop.entity.SysAuthMenu" id="SysAuthMenuMap">
+        <result property="id" column="id" jdbcType="INTEGER"/>
+        <result property="authId" column="auth_id" jdbcType="INTEGER"/>
+        <result property="menuId" column="menu_id" jdbcType="INTEGER"/>
+        <result property="ctime" column="ctime" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <!--查询单个-->
+    <select id="queryById" resultMap="SysAuthMenuMap">
+        select
+          id, auth_id, menu_id, ctime
+        from wx_shop.sys_auth_menu
+        where id = #{id}
+    </select>
+
+    <!--查询指定行数据-->
+    <select id="queryAllByLimit" resultMap="SysAuthMenuMap">
+        select
+          id, auth_id, menu_id, ctime
+        from wx_shop.sys_auth_menu
+        limit #{offset}, #{limit}
+    </select>
+
+    <!--通过实体作为筛选条件查询-->
+    <select id="queryAll" resultMap="SysAuthMenuMap">
+        select
+          id, auth_id, menu_id, ctime
+        from wx_shop.sys_auth_menu
+        <where>
+            <if test="id != null">
+                and id = #{id}
+            </if>
+            <if test="authId != null">
+                and auth_id = #{authId}
+            </if>
+            <if test="menuId != null">
+                and menu_id = #{menuId}
+            </if>
+            <if test="ctime != null">
+                and ctime = #{ctime}
+            </if>
+        </where>
+    </select>
+    
+    <select id="queryObj" resultMap="SysAuthMenuMap">
+        select
+          id, auth_id, menu_id, ctime
+        from wx_shop.sys_auth_menu
+        <where>
+            <if test="id != null">
+                and id = #{id}
+            </if>
+            <if test="authId != null">
+                and auth_id = #{authId}
+            </if>
+            <if test="menuId != null">
+                and menu_id = #{menuId}
+            </if>
+            <if test="ctime != null">
+                and ctime = #{ctime}
+            </if>
+        </where>
+    </select>
+    <!--新增所有列-->
+    <insert id="insert" keyProperty="id" useGeneratedKeys="true">
+        insert into wx_shop.sys_auth_menu(auth_id, menu_id, ctime)
+        values (#{authId}, #{menuId}, #{ctime})
+    </insert>
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update wx_shop.sys_auth_menu
+        <set>
+            <if test="authId != null">
+                auth_id = #{authId},
+            </if>
+            <if test="menuId != null">
+                menu_id = #{menuId},
+            </if>
+            <if test="ctime != null">
+                ctime = #{ctime},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <!--通过主键删除-->
+    <delete id="deleteById">
+        delete from wx_shop.sys_auth_menu where id = #{id}
+    </delete>
+
+</mapper>

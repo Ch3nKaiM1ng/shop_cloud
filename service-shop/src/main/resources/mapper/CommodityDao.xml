@@ -1,0 +1,254 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wx_shop.serviceshop.dao.CommodityDao">
+
+    <resultMap type="com.wx_shop.serviceshop.entity.Commodity" id="CommodityMap">
+        <result property="commodityId" column="commodity_id" jdbcType="INTEGER"/>
+        <result property="shopId" column="shop_id" jdbcType="INTEGER"/>
+        <result property="commodityTypeId" column="commodity_type_id" jdbcType="INTEGER"/>
+        <result property="commodityName" column="commodity_name" jdbcType="VARCHAR"/>
+        <result property="commodityIntroduce" column="commodity_introduce" jdbcType="VARCHAR"/>
+        <result property="commodityLabel" column="commodity_label" jdbcType="VARCHAR"/>
+        <result property="commodityStock" column="commodity_stock" jdbcType="VARCHAR"/>
+        <result property="commoditySales" column="commodity_sales" jdbcType="VARCHAR"/>
+        <result property="commodityGood" column="commodity_good" jdbcType="INTEGER"/>
+        <result property="commodityPrice" column="commodity_price" jdbcType="NUMERIC"/>
+        <result property="commodityTruePrice" column="commodity_true_price" jdbcType="NUMERIC"/>
+        <result property="commodityImg" column="commodity_img" jdbcType="VARCHAR"/>
+        <result property="cTime" column="ctime" jdbcType="TIMESTAMP"/>
+        <result property="state" column="state" jdbcType="INTEGER"/>
+        <association property="sales"  select="querySalesById" column="commodity_id">
+        </association>
+    </resultMap>
+    <resultMap type="com.wx_shop.serviceshop.entity.commodityScore" id="CommodityScoreMap">
+        <result property="sales" column="sales" jdbcType="VARCHAR"/>
+        <result property="avgTestScore" column="avgTestScore" jdbcType="VARCHAR"/>
+        <result property="avgWeightScore" column="avgWeightScore" jdbcType="VARCHAR"/>
+        <result property="avgCommodityScore" column="avgCommodityScore" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <!--查询单个-->
+    <select id="querySalesById" resultType="java.lang.Integer">
+        select count(*) as sales from sub_order
+        where commodity_id =  #{commodityId}
+    </select>
+
+    <!--查询单个-->
+    <select id="queryById" resultMap="CommodityMap">
+        select
+          commodity_id, shop_id, commodity_type_id, commodity_name, commodity_introduce, commodity_stock, commodity_sales, commodity_good, commodity_price, commodity_true_price, commodity_img,ctime,state,commodity_label
+        from wx_shop.commodity
+        where commodity_id = #{commodityId}
+    </select>
+
+    <!--查询指定行数据-->
+    <select id="queryAllByLimit" resultMap="CommodityMap">
+        select
+          commodity_id, shop_id, commodity_type_id, commodity_name, commodity_introduce, commodity_stock, commodity_sales, commodity_good, commodity_price, commodity_true_price, commodity_img,ctime,state,commodity_label
+        from wx_shop.commodity
+        limit #{offset}, #{limit}
+    </select>
+
+    <!--通过实体作为筛选条件查询-->
+    <select id="queryAll" resultMap="CommodityMap">
+        select
+        commodity_id, shop_id, commodity_type_id, commodity_name, commodity_introduce, commodity_stock, commodity_sales, commodity_good, commodity_price, commodity_true_price, commodity_img,ctime,state,commodity_label
+        from wx_shop.commodity
+        <where>
+            state = 1
+            <if test="commodityId != null">
+                and commodity_id = #{commodityId}
+            </if>
+            <if test="shopId != null">
+                and shop_id = #{shopId}
+            </if>
+            <if test="commodityTypeId != null and commodityTypeId != ''">
+                and commodity_type_id = #{commodityTypeId}
+            </if>
+            <if test="commodityName != null and commodityName != ''">
+                and commodity_name = #{commodityName}
+            </if>
+            <if test="commodityIntroduce != null and commodityIntroduce != ''">
+                and commodity_introduce = #{commodityIntroduce}
+            </if>
+            <if test="commodityStock != null and commodityStock != ''">
+                and commodity_stock = #{commodityStock}
+            </if>
+            <if test="commoditySales != null and commoditySales != ''">
+                and commodity_sales = #{commoditySales}
+            </if>
+            <if test="commodityGood != null and commodityGood != ''">
+                and commodity_good = #{commodityGood}
+            </if>
+            <if test="commodityPrice != null">
+                and commodity_price = #{commodityPrice}
+            </if>
+            <if test="commodityTruePrice != null">
+                and commodity_true_price = #{commodityTruePrice}
+            </if>
+            <if test="commodityImg != null">
+                and commodity_img = #{commodityImg}
+            </if>
+
+        </where>
+        order by commodity_id desc
+        limit #{offset}, #{limit}
+    </select>
+
+    <select id="queryCommodityByWx" resultMap="CommodityMap">
+        select
+        commodity_id, shop_id, commodity_type_id, commodity_name, commodity_introduce, commodity_stock, commodity_sales, commodity_good, commodity_price, commodity_true_price, commodity_img,ctime,state,commodity_label
+        from wx_shop.commodity
+        where 1=1 and state = 1
+        and commodity_type_id = #{commodityTypeId}
+        order by commodity_sales desc
+    </select>
+
+    <!--通过实体作为筛选条件查询-->
+    <select id="countNum" resultType="java.lang.Integer">
+        select
+        count(*)
+        from wx_shop.commodity
+        <where>
+            state = 1
+            <if test="commodityId != null">
+                and commodity_id = #{commodityId}
+            </if>
+            <if test="shopId != null">
+                and shop_id = #{shopId}
+            </if>
+            <if test="commodityTypeId != null and commodityTypeId != ''">
+                and commodity_type_id = #{commodityTypeId}
+            </if>
+            <if test="commodityName != null and commodityName != ''">
+                and commodity_name = #{commodityName}
+            </if>
+            <if test="commodityIntroduce != null and commodityIntroduce != ''">
+                and commodity_introduce = #{commodityIntroduce}
+            </if>
+            <if test="commodityStock != null and commodityStock != ''">
+                and commodity_stock = #{commodityStock}
+            </if>
+            <if test="commoditySales != null and commoditySales != ''">
+                and commodity_sales = #{commoditySales}
+            </if>
+            <if test="commodityGood != null and commodityGood != ''">
+                and commodity_good = #{commodityGood}
+            </if>
+            <if test="commodityPrice != null">
+                and commodity_price = #{commodityPrice}
+            </if>
+            <if test="commodityTruePrice != null">
+                and commodity_true_price = #{commodityTruePrice}
+            </if>
+            <if test="commodityImg != null">
+                and commodity_img = #{commodityImg}
+            </if>
+        </where>
+    </select>
+
+    <select id="queryObj" resultMap="CommodityMap">
+        select
+        commodity_id, shop_id, commodity_type_id, commodity_name, commodity_introduce, commodity_stock, commodity_sales, commodity_good, commodity_price, commodity_true_price, commodity_img,ctime,state,commodity_label
+        from wx_shop.commodity
+        <where>
+            <if test="commodityId != null">
+                and commodity_id = #{commodityId}
+            </if>
+            <if test="shopId != null">
+                and shop_id = #{shopId}
+            </if>
+            <if test="commodityTypeId != null and commodityTypeId != ''">
+                and commodity_type_id = #{commodityTypeId}
+            </if>
+            <if test="commodityName != null and commodityName != ''">
+                and commodity_name = #{commodityName}
+            </if>
+            <if test="commodityIntroduce != null and commodityIntroduce != ''">
+                and commodity_introduce = #{commodityIntroduce}
+            </if>
+            <if test="commodityStock != null and commodityStock != ''">
+                and commodity_stock = #{commodityStock}
+            </if>
+            <if test="commoditySales != null and commoditySales != ''">
+                and commodity_sales = #{commoditySales}
+            </if>
+            <if test="commodityGood != null and commodityGood != ''">
+                and commodity_good = #{commodityGood}
+            </if>
+            <if test="commodityPrice != null">
+                and commodity_price = #{commodityPrice}
+            </if>
+            <if test="commodityTruePrice != null">
+                and commodity_true_price = #{commodityTruePrice}
+            </if>
+            <if test="commodityImg != null">
+                and commodity_img = #{commodityImg}
+            </if>
+        </where>
+    </select>
+    <!--新增所有列-->
+    <insert id="insert" keyProperty="commodityId" useGeneratedKeys="true">
+        insert into wx_shop.commodity(shop_id, commodity_type_id, commodity_name, commodity_introduce, commodity_stock, commodity_sales, commodity_good, commodity_price, commodity_true_price, commodity_img,ctime,state,commodity_label)
+        values (#{shopId}, #{commodityTypeId}, #{commodityName}, #{commodityIntroduce}, #{commodityStock}, #{commoditySales}, #{commodityGood}, #{commodityPrice}, #{commodityTruePrice}, #{commodityImg},now(),1,#{commodityLabel})
+    </insert>
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update wx_shop.commodity
+        <set>
+            <if test="shopId != null">
+                shop_id = #{shopId},
+            </if>
+            <if test="commodityTypeId != null and commodityTypeId != ''">
+                commodity_type_id = #{commodityTypeId},
+            </if>
+            <if test="commodityName != null and commodityName != ''">
+                commodity_name = #{commodityName},
+            </if>
+            <if test="commodityIntroduce != null and commodityIntroduce != ''">
+                commodity_introduce = #{commodityIntroduce},
+            </if>
+            <if test="commodityStock != null and commodityStock != ''">
+                commodity_stock = #{commodityStock},
+            </if>
+            <if test="commoditySales != null and commoditySales != ''">
+                commodity_sales = #{commoditySales},
+            </if>
+            <if test="commodityGood != null and commodityGood != ''">
+                commodity_good = #{commodityGood},
+            </if>
+            <if test="commodityPrice != null">
+                commodity_price = #{commodityPrice},
+            </if>
+            <if test="commodityTruePrice != null">
+                commodity_true_price = #{commodityTruePrice},
+            </if>
+            <if test="commodityImg != null">
+                commodity_img = #{commodityImg},
+            </if>
+            <if test="state != null">
+                state = #{state},
+            </if>
+            <if test="commodityLabel != null">
+                commodity_label = #{commodityLabel},
+            </if>
+        </set>
+        where commodity_id = #{commodityId}
+    </update>
+
+    <!--通过主键删除-->
+    <delete id="deleteById">
+        delete from wx_shop.commodity where commodity_id = #{commodityId}
+    </delete>
+
+    <select id="findAvgScore" resultMap="CommodityScoreMap">
+        SELECT round(avg(test_score),1) as avgTestScore,round(avg(weight_score),1) as avgWeightScore,round(((avg(test_score)+avg(weight_score))/2),1) as avgCommodityScore,count(*) as sales from sub_order sub
+        left join main_order main on sub.main_order_id=main.main_order_id
+        left join evaluate eva on main.main_order_id =eva.main_order_id
+        where sub.commodity_id =#{commodityId}
+        and main.evaluate=1
+    </select>
+
+
+</mapper>

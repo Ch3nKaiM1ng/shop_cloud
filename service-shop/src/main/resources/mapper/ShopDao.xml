@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wx_shop.serviceshop.dao.ShopDao">
+
+    <resultMap type="com.wx_shop.serviceshop.entity.Shop" id="ShopMap">
+        <result property="shopId" column="shop_id" jdbcType="INTEGER"/>
+        <result property="shopName" column="shop_name" jdbcType="VARCHAR"/>
+        <result property="shopImg" column="shop_img" jdbcType="VARCHAR"/>
+        <result property="shopAddress" column="shop_address" jdbcType="VARCHAR"/>
+        <result property="shopMobile" column="shop_mobile" jdbcType="VARCHAR"/>
+        <result property="shopSeniority" column="shop_seniority" jdbcType="VARCHAR"/>
+        <result property="shopTime" column="shop_time" jdbcType="VARCHAR"/>
+        <result property="shopStime" column="shop_s_time" jdbcType="VARCHAR"/>
+        <result property="shopEtime" column="shop_e_time" jdbcType="VARCHAR"/>
+        <result property="shopNotice" column="shop_notice" jdbcType="VARCHAR"/>
+        <result property="shopWxpay" column="shop_wxpay" jdbcType="INTEGER"/>
+        <result property="shopStartpay" column="shop_startpay" jdbcType="NUMERIC"/>
+        <result property="status" column="status" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <!--查询单个-->
+    <select id="queryById" resultMap="ShopMap">
+        select
+          shop_id, shop_name, shop_img, shop_address, shop_mobile, shop_seniority, shop_time, shop_notice, shop_wxpay, shop_startpay,status,shop_s_time,shop_e_time
+        from wx_shop.shop
+        where shop_id = #{shopId}
+    </select>
+
+    <!--查询指定行数据-->
+    <select id="queryAllByLimit" resultMap="ShopMap">
+        select
+          shop_id, shop_name, shop_img, shop_address, shop_mobile, shop_seniority, shop_time, shop_notice, shop_wxpay, shop_startpay,status,shop_s_time,shop_e_time
+        from wx_shop.shop
+        limit #{offset}, #{limit}
+    </select>
+
+    <!--通过实体作为筛选条件查询-->
+    <select id="countNum" resultType="java.lang.Integer">
+        select
+        count(*)
+        from wx_shop.shop
+        <where>
+            status !=0
+            <if test="shopId != null">
+                and shop_id = #{shopId}
+            </if>
+            <if test="shopName != null and shopName != ''">
+                and shop_name = #{shopName}
+            </if>
+            <if test="shopImg != null and shopImg != ''">
+                and shop_img = #{shopImg}
+            </if>
+            <if test="shopAddress != null and shopAddress != ''">
+                and shop_address = #{shopAddress}
+            </if>
+            <if test="shopMobile != null and shopMobile != ''">
+                and shop_mobile = #{shopMobile}
+            </if>
+            <if test="shopSeniority != null and shopSeniority != ''">
+                and shop_seniority = #{shopSeniority}
+            </if>
+            <if test="shopTime != null and shopTime != ''">
+                and shop_time = #{shopTime}
+            </if>
+            <if test="shopNotice != null and shopNotice != ''">
+                and shop_notice = #{shopNotice}
+            </if>
+            <if test="shopWxpay != null">
+                and shop_wxpay = #{shopWxpay}
+            </if>
+            <if test="shopStartpay != null">
+                and shop_startpay = #{shopStartpay}
+            </if>
+        </where>
+    </select>
+
+    <!--通过实体作为筛选条件查询-->
+    <select id="queryAll" resultMap="ShopMap">
+        select
+          shop_id, shop_name, shop_img, shop_address, shop_mobile, shop_seniority, shop_time, shop_notice, shop_wxpay, shop_startpay,status,shop_s_time,shop_e_time
+        from wx_shop.shop
+        <where>
+            status !=0
+            <if test="shopId != null">
+                and shop_id = #{shopId}
+            </if>
+            <if test="shopName != null and shopName != ''">
+                and shop_name = #{shopName}
+            </if>
+            <if test="shopImg != null and shopImg != ''">
+                and shop_img = #{shopImg}
+            </if>
+            <if test="shopAddress != null and shopAddress != ''">
+                and shop_address = #{shopAddress}
+            </if>
+            <if test="shopMobile != null and shopMobile != ''">
+                and shop_mobile = #{shopMobile}
+            </if>
+            <if test="shopSeniority != null and shopSeniority != ''">
+                and shop_seniority = #{shopSeniority}
+            </if>
+            <if test="shopTime != null and shopTime != ''">
+                and shop_time = #{shopTime}
+            </if>
+            <if test="shopNotice != null and shopNotice != ''">
+                and shop_notice = #{shopNotice}
+            </if>
+            <if test="shopWxpay != null">
+                and shop_wxpay = #{shopWxpay}
+            </if>
+            <if test="shopStartpay != null">
+                and shop_startpay = #{shopStartpay}
+            </if>
+        </where>
+        order by shop_id asc
+        limit #{offset}, #{limit}
+    </select>
+    
+    <select id="queryObj" resultMap="ShopMap">
+        select
+          shop_id, shop_name, shop_img, shop_address, shop_mobile, shop_seniority, shop_time, shop_notice, shop_wxpay, shop_startpay,status,shop_s_time,shop_e_time
+        from wx_shop.shop
+        <where>
+            <if test="shopId != null">
+                and shop_id = #{shopId}
+            </if>
+            <if test="shopName != null and shopName != ''">
+                and shop_name = #{shopName}
+            </if>
+            <if test="shopImg != null and shopImg != ''">
+                and shop_img = #{shopImg}
+            </if>
+            <if test="shopAddress != null and shopAddress != ''">
+                and shop_address = #{shopAddress}
+            </if>
+            <if test="shopMobile != null and shopMobile != ''">
+                and shop_mobile = #{shopMobile}
+            </if>
+            <if test="shopSeniority != null and shopSeniority != ''">
+                and shop_seniority = #{shopSeniority}
+            </if>
+            <if test="shopTime != null and shopTime != ''">
+                and shop_time = #{shopTime}
+            </if>
+            <if test="shopNotice != null and shopNotice != ''">
+                and shop_notice = #{shopNotice}
+            </if>
+            <if test="shopWxpay != null">
+                and shop_wxpay = #{shopWxpay}
+            </if>
+            <if test="shopStartpay != null">
+                and shop_startpay = #{shopStartpay}
+            </if>
+        </where>
+    </select>
+    <!--新增所有列-->
+    <insert id="insert" keyProperty="shopId" useGeneratedKeys="true">
+        insert into wx_shop.shop(shop_name, shop_img, shop_address, shop_mobile, shop_seniority, shop_time, shop_notice, shop_wxpay, shop_startpay,status,shop_s_time,shop_e_time)
+        values (#{shopName}, #{shopImg}, #{shopAddress}, #{shopMobile}, #{shopSeniority}, #{shopTime}, #{shopNotice}, #{shopWxpay}, #{shopStartpay},1,#{shopStime},#{shopEtime})
+    </insert>
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update wx_shop.shop
+        <set>
+            <if test="shopName != null and shopName != ''">
+                shop_name = #{shopName},
+            </if>
+            <if test="shopImg != null and shopImg != ''">
+                shop_img = #{shopImg},
+            </if>
+            <if test="shopAddress != null and shopAddress != ''">
+                shop_address = #{shopAddress},
+            </if>
+            <if test="shopMobile != null and shopMobile != ''">
+                shop_mobile = #{shopMobile},
+            </if>
+            <if test="shopSeniority != null and shopSeniority != ''">
+                shop_seniority = #{shopSeniority},
+            </if>
+            <if test="shopTime != null and shopTime != ''">
+                shop_time = #{shopTime},
+            </if>
+            <if test="shopStime != null and shopStime != ''">
+                shop_s_time = #{shopStime},
+            </if>
+            <if test="shopEtime != null and shopEtime != ''">
+                shop_e_time = #{shopEtime},
+            </if>
+            <if test="shopNotice != null and shopNotice != ''">
+                shop_notice = #{shopNotice},
+            </if>
+            <if test="shopWxpay != null">
+                shop_wxpay = #{shopWxpay},
+            </if>
+            <if test="shopStartpay != null">
+                shop_startpay = #{shopStartpay},
+            </if>
+            <if test="status != null">
+                status = #{status},
+            </if>
+        </set>
+        where shop_id = #{shopId}
+    </update>
+
+    <!--通过主键删除-->
+    <delete id="deleteById">
+        delete from wx_shop.shop where shop_id = #{shopId}
+    </delete>
+
+</mapper>

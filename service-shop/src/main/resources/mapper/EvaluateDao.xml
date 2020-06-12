@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wx_shop.serviceshop.dao.EvaluateDao">
+
+    <resultMap type="com.wx_shop.serviceshop.entity.Evaluate" id="EvaluateMap">
+        <result property="evaluateId" column="evaluate_id" jdbcType="INTEGER"/>
+        <result property="mainOrderId" column="main_order_id" jdbcType="INTEGER"/>
+        <result property="shopId" column="shop_id" jdbcType="INTEGER"/>
+        <result property="userId" column="user_id" jdbcType="INTEGER"/>
+        <result property="content" column="content" jdbcType="VARCHAR"/>
+        <result property="shopReply" column="shop_reply" jdbcType="VARCHAR"/>
+        <result property="img" column="img" jdbcType="VARCHAR"/>
+        <result property="score" column="score" jdbcType="VARCHAR"/>
+        <result property="testScore" column="test_score" jdbcType="VARCHAR"/>
+        <result property="weightScore" column="weight_score" jdbcType="VARCHAR"/>
+        <result property="ctime" column="ctime" jdbcType="TIMESTAMP"/>
+        <association property="userData"  select="com.wx_shop.serviceshop.dao.WxUserDao.queryById" column="user_id">
+        </association>
+    </resultMap>
+
+    <!--查询单个-->
+    <select id="queryById" resultMap="EvaluateMap">
+        select
+          evaluate_id, main_order_id, shop_id, user_id, content, shop_reply, img, score, ctime,test_score,weight_score
+        from wx_shop.evaluate
+        where evaluate_id = #{evaluateId}
+    </select>
+
+    <!--查询单个-->
+    <select id="findAllByCommodityId" resultMap="EvaluateMap">
+        select eva.* from evaluate eva
+        left join main_order main on eva.main_order_id=main.main_order_id
+        left join sub_order sub on sub.main_order_id=main.main_order_id
+        left join wx_user usr on main.user_id=usr.user_id
+        where sub.commodity_id=#{commodityId}
+        <if test="haveImg == 1">
+            and eva.img != ''
+        </if>
+        order by eva.evaluate_id desc
+        limit #{offset}, #{limit}
+    </select>
+    <!--查询单个-->
+    <select id="countNum" resultType="java.lang.Integer">
+        select count(*) from evaluate eva
+        left join main_order main on eva.main_order_id=main.main_order_id
+        left join sub_order sub on sub.main_order_id=main.main_order_id
+        left join wx_user usr on main.user_id=usr.user_id
+        where sub.commodity_id=#{commodityId}
+        <if test="haveImg == 1">
+            and eva.img != ''
+        </if>
+    </select>
+
+
+    <!--查询指定行数据-->
+    <select id="queryAllByLimit" resultMap="EvaluateMap">
+        select
+          evaluate_id, main_order_id, shop_id, user_id, content, shop_reply, img, score, ctime,test_score,weight_score
+        from wx_shop.evaluate
+        limit #{offset}, #{limit}
+    </select>
+
+    <!--通过实体作为筛选条件查询-->
+    <select id="queryAll" resultMap="EvaluateMap">
+        select
+          evaluate_id, main_order_id, shop_id, user_id, content, shop_reply, img, score, ctime,test_score,weight_score
+        from wx_shop.evaluate
+        <where>
+            <if test="evaluateId != null">
+                and evaluate_id = #{evaluateId}
+            </if>
+            <if test="mainOrderId != null">
+                and main_order_id = #{mainOrderId}
+            </if>
+            <if test="shopId != null">
+                and shop_id = #{shopId}
+            </if>
+            <if test="userId != null">
+                and user_id = #{userId}
+            </if>
+            <if test="content != null and content != ''">
+                and content = #{content}
+            </if>
+            <if test="shopReply != null and shopReply != ''">
+                and shop_reply = #{shopReply}
+            </if>
+            <if test="img != null and img != ''">
+                and img = #{img}
+            </if>
+            <if test="score != null and score != ''">
+                and score = #{score}
+            </if>
+            <if test="ctime != null">
+                and ctime = #{ctime}
+            </if>
+        </where>
+    </select>
+    
+    <select id="queryObj" resultMap="EvaluateMap">
+        select
+          evaluate_id, main_order_id, shop_id, user_id, content, shop_reply, img, score, ctime,test_score,weight_score
+        from wx_shop.evaluate
+        <where>
+            <if test="evaluateId != null">
+                and evaluate_id = #{evaluateId}
+            </if>
+            <if test="mainOrderId != null">
+                and main_order_id = #{mainOrderId}
+            </if>
+            <if test="shopId != null">
+                and shop_id = #{shopId}
+            </if>
+            <if test="userId != null">
+                and user_id = #{userId}
+            </if>
+            <if test="content != null and content != ''">
+                and content = #{content}
+            </if>
+            <if test="shopReply != null and shopReply != ''">
+                and shop_reply = #{shopReply}
+            </if>
+            <if test="img != null and img != ''">
+                and img = #{img}
+            </if>
+            <if test="score != null and score != ''">
+                and score = #{score}
+            </if>
+            <if test="ctime != null">
+                and ctime = #{ctime}
+            </if>
+        </where>
+    </select>
+    <!--新增所有列-->
+    <insert id="insert" keyProperty="evaluateId" useGeneratedKeys="true">
+        insert into wx_shop.evaluate(main_order_id, shop_id, user_id, content, shop_reply, img, score, ctime,test_score,weight_score)
+        values (#{mainOrderId}, #{shopId}, #{userId}, #{content}, #{shopReply}, #{img}, #{score}, now(), #{testScore}, #{weightScore})
+    </insert>
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update wx_shop.evaluate
+        <set>
+            <if test="mainOrderId != null">
+                main_order_id = #{mainOrderId},
+            </if>
+            <if test="shopId != null">
+                shop_id = #{shopId},
+            </if>
+            <if test="userId != null">
+                user_id = #{userId},
+            </if>
+            <if test="content != null and content != ''">
+                content = #{content},
+            </if>
+            <if test="shopReply != null and shopReply != ''">
+                shop_reply = #{shopReply},
+            </if>
+            <if test="img != null and img != ''">
+                img = #{img},
+            </if>
+            <if test="score != null and score != ''">
+                score = #{score},
+            </if>
+            <if test="ctime != null">
+                ctime = #{ctime},
+            </if>
+        </set>
+        where evaluate_id = #{evaluateId}
+    </update>
+
+    <!--通过主键删除-->
+    <delete id="deleteById">
+        delete from wx_shop.evaluate where evaluate_id = #{evaluateId}
+    </delete>
+
+</mapper>

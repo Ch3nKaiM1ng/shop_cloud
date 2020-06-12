@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wx_shop.servicetest.dao.DoctorDao">
+
+    <resultMap type="com.wx_shop.servicetest.entity.Doctor" id="DoctorMap">
+        <result property="id" column="id" jdbcType="INTEGER"/>
+        <result property="doctorName" column="doctor_name" jdbcType="VARCHAR"/>
+        <result property="doctorCode" column="doctor_code" jdbcType="VARCHAR"/>
+        <result property="doctorImg" column="doctor_img" jdbcType="VARCHAR"/>
+        <result property="doctorRemark" column="doctor_remark" jdbcType="VARCHAR"/>
+        <result property="doctorCost" column="doctor_cost" jdbcType="NUMERIC"/>
+        <result property="ctime" column="ctime" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <!--查询单个-->
+    <select id="queryById" resultMap="DoctorMap">
+        select
+          id, doctor_name, doctor_code, doctor_img, doctor_remark, doctor_cost, ctime
+        from wx_order.doctor
+        where id = #{id}
+    </select>
+
+    <!--查询指定行数据-->
+    <select id="queryAllByLimit" resultMap="DoctorMap">
+        select
+          id, doctor_name, doctor_code, doctor_img, doctor_remark, doctor_cost, ctime
+        from wx_order.doctor
+        limit #{offset}, #{limit}
+    </select>
+
+    <!--通过实体作为筛选条件查询-->
+    <select id="queryAll" resultMap="DoctorMap">
+        select
+          id, doctor_name, doctor_code, doctor_img, doctor_remark, doctor_cost, ctime
+        from wx_order.doctor
+        <where>
+            <if test="id != null">
+                and id = #{id}
+            </if>
+            <if test="doctorName != null and doctorName != ''">
+                and doctor_name = #{doctorName}
+            </if>
+            <if test="doctorCode != null and doctorCode != ''">
+                and doctor_code = #{doctorCode}
+            </if>
+            <if test="doctorImg != null and doctorImg != ''">
+                and doctor_img = #{doctorImg}
+            </if>
+            <if test="doctorRemark != null and doctorRemark != ''">
+                and doctor_remark = #{doctorRemark}
+            </if>
+            <if test="doctorCost != null">
+                and doctor_cost = #{doctorCost}
+            </if>
+            <if test="ctime != null">
+                and ctime = #{ctime}
+            </if>
+        </where>
+    </select>
+    
+    <select id="queryObj" resultMap="DoctorMap">
+        select
+          id, doctor_name, doctor_code, doctor_img, doctor_remark, doctor_cost, ctime
+        from wx_order.doctor
+        <where>
+            <if test="id != null">
+                and id = #{id}
+            </if>
+            <if test="doctorName != null and doctorName != ''">
+                and doctor_name = #{doctorName}
+            </if>
+            <if test="doctorCode != null and doctorCode != ''">
+                and doctor_code = #{doctorCode}
+            </if>
+            <if test="doctorImg != null and doctorImg != ''">
+                and doctor_img = #{doctorImg}
+            </if>
+            <if test="doctorRemark != null and doctorRemark != ''">
+                and doctor_remark = #{doctorRemark}
+            </if>
+            <if test="doctorCost != null">
+                and doctor_cost = #{doctorCost}
+            </if>
+            <if test="ctime != null">
+                and ctime = #{ctime}
+            </if>
+        </where>
+    </select>
+    <!--新增所有列-->
+    <insert id="insert" keyProperty="id" useGeneratedKeys="true">
+        insert into wx_order.doctor(doctor_name, doctor_code, doctor_img, doctor_remark, doctor_cost, ctime)
+        values (#{doctorName}, #{doctorCode}, #{doctorImg}, #{doctorRemark}, #{doctorCost}, #{ctime})
+    </insert>
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update wx_order.doctor
+        <set>
+            <if test="doctorName != null and doctorName != ''">
+                doctor_name = #{doctorName},
+            </if>
+            <if test="doctorCode != null and doctorCode != ''">
+                doctor_code = #{doctorCode},
+            </if>
+            <if test="doctorImg != null and doctorImg != ''">
+                doctor_img = #{doctorImg},
+            </if>
+            <if test="doctorRemark != null and doctorRemark != ''">
+                doctor_remark = #{doctorRemark},
+            </if>
+            <if test="doctorCost != null">
+                doctor_cost = #{doctorCost},
+            </if>
+            <if test="ctime != null">
+                ctime = #{ctime},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <!--通过主键删除-->
+    <delete id="deleteById">
+        delete from wx_order.doctor where id = #{id}
+    </delete>
+
+</mapper>
