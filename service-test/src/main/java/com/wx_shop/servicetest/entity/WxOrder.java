@@ -70,6 +70,8 @@ public class WxOrder implements Serializable {
 
     private Integer isjump;
 
+    private Integer sendMsg;
+
     private Integer notState;
 
     private Integer nowOrder;
@@ -81,6 +83,14 @@ public class WxOrder implements Serializable {
     private Integer orderby;
 
     private Doctor doctorData;
+
+    public Integer getSendMsg() {
+        return sendMsg;
+    }
+
+    public void setSendMsg(Integer sendMsg) {
+        this.sendMsg = sendMsg;
+    }
 
     public Doctor getDoctorData() {
         return doctorData;

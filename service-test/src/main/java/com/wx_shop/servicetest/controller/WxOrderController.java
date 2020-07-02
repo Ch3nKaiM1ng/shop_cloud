@@ -124,6 +124,7 @@ public class WxOrderController {
 //        int ordertype=param.getOrdertype();
         String stime=entity.getStime();
         String eTime=entity.getEtime();
+        int sendMsg=entity.getSendMsg();
         WxOrder checkParam=new WxOrder();
 //        checkParam.setOrdertype(ordertype);//设置排队的列表
         checkParam.setState(1);//已到场
@@ -150,25 +151,29 @@ public class WxOrderController {
 //                    frontType="XY";
 //                }
                 //获取第一条，判断是否有OPENID
-                if(i==0){
-                    log.info("First="+wxOrder.getOpenid());
-                    if(wxOrder.getOpenid()==null){
-                        continue;
-                    }else{
-                        log.info("sendFirst="+wxOrder.getOpenid());
-                        wxmsg.sendTemplateMessages(wxOrder.getOpenid(),frontType+doctorCode+wxOrder.getOrderNum().toString(),"0",accessToken,ctime);
+                if(sendMsg==1) {
+                    if (i == 0) {
+                        log.info("First=" + wxOrder.getOpenid());
+                        if (wxOrder.getOpenid() == null) {
+                            continue;
+                        } else {
+                            log.info("sendFirst=" + wxOrder.getOpenid());
+                            wxmsg.sendTemplateMessages(wxOrder.getOpenid(), frontType + doctorCode + wxOrder.getOrderNum().toString(), "0", accessToken, ctime);
+                        }
                     }
-                }
 
-                //推送第二条
-                if(i==1){
-                    log.info("Second="+wxOrder.getOpenid());
-                    if(wxOrder.getOpenid()==null){
-                        continue;
-                    }else {
-                        log.info("sendSecond="+wxOrder.getOpenid());
-                        wxmsg.sendTemplateMessages(wxOrder.getOpenid(), frontType+doctorCode+ wxOrder.getOrderNum().toString(), "1", accessToken,ctime);
+                    //推送第二条
+                    if (i == 1) {
+                        log.info("Second=" + wxOrder.getOpenid());
+                        if (wxOrder.getOpenid() == null) {
+                            continue;
+                        } else {
+                            log.info("sendSecond=" + wxOrder.getOpenid());
+                            wxmsg.sendTemplateMessages(wxOrder.getOpenid(), frontType + doctorCode + wxOrder.getOrderNum().toString(), "1", accessToken, ctime);
+                        }
                     }
+                }else{
+                    log.info("sendMsg=="+sendMsg+" so not Send MSG");
                 }
             }
         }
