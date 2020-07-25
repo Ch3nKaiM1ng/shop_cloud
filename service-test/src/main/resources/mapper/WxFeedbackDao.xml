@@ -8,6 +8,7 @@
         <result property="openid" column="openid" jdbcType="VARCHAR"/>
         <result property="meatDay" column="meat_day" jdbcType="TIMESTAMP"/>
         <result property="meatTime" column="meat_time" jdbcType="INTEGER"/>
+        <result property="meat_project" column="meatProject" jdbcType="VARCHAR"/>
         <result property="feedbackType" column="feedback_type" jdbcType="VARCHAR"/>
         <result property="problemDescription" column="problem_description" jdbcType="VARCHAR"/>
         <result property="content" column="content" jdbcType="VARCHAR"/>
@@ -20,7 +21,7 @@
     <!--查询单个-->
     <select id="queryById" resultMap="WxFeedbackMap">
         select
-          id, appid, openid, meat_day, meat_time, feedback_type, problem_description, content, image, phone, ctime, status
+          id, appid, openid, meat_day, meat_time, feedback_type,meat_project, problem_description, content, image, phone, ctime, status
         from wx_order.wx_feedback
         where id = #{id}
     </select>
@@ -28,7 +29,7 @@
     <!--查询指定行数据-->
     <select id="queryAllByLimit" resultMap="WxFeedbackMap">
         select
-          id, appid, openid, meat_day, meat_time, feedback_type, problem_description, content, image, phone, ctime, status
+          id, appid, openid, meat_day, meat_time, feedback_type,meat_project, problem_description, content, image, phone, ctime, status
         from wx_order.wx_feedback
         limit #{offset}, #{limit}
     </select>
@@ -36,7 +37,7 @@
     <!--通过实体作为筛选条件查询-->
     <select id="queryAll" resultMap="WxFeedbackMap">
         select
-          id, appid, openid, meat_day, meat_time, feedback_type, problem_description, content, image, phone, ctime, status
+          id, appid, openid, meat_day, meat_time, feedback_type,meat_project, problem_description, content, image, phone, ctime, status
         from wx_order.wx_feedback
         <where>
             <if test="id != null">
@@ -80,7 +81,7 @@
     
     <select id="queryObj" resultMap="WxFeedbackMap">
         select
-          id, appid, openid, meat_day, meat_time, feedback_type, problem_description, content, image, phone, ctime, status
+          id, appid, openid, meat_day, meat_time, feedback_type, problem_description,meat_project, content, image, phone, ctime, status
         from wx_order.wx_feedback
         <where>
             <if test="id != null">
@@ -123,8 +124,8 @@
     </select>
     <!--新增所有列-->
     <insert id="insert" keyProperty="id" useGeneratedKeys="true">
-        insert into wx_order.wx_feedback(appid, openid, meat_day, meat_time, feedback_type, problem_description, content, image, phone, ctime, status)
-        values (#{appid}, #{openid}, #{meatDay}, #{meatTime}, #{feedbackType}, #{problemDescription}, #{content}, #{image}, #{phone}, now(), #{status})
+        insert into wx_order.wx_feedback(appid, openid, meat_day, meat_time,meat_project, feedback_type, problem_description, content, image, phone, ctime, status)
+        values (#{appid}, #{openid}, #{meatDay}, #{meatTime},#{meatProject}, #{feedbackType}, #{problemDescription}, #{content}, #{image}, #{phone}, now(), #{status})
     </insert>
 
     <!--通过主键修改数据-->
@@ -148,6 +149,9 @@
             </if>
             <if test="problemDescription != null and problemDescription != ''">
                 problem_description = #{problemDescription},
+            </if>
+            <if test="meatProject != null and meatProject != ''">
+                meat_project = #{meatProject},
             </if>
             <if test="content != null and content != ''">
                 content = #{content},
