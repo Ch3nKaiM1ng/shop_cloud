@@ -35,6 +35,8 @@ eureka:
 mybatis:
   type-aliases-package: com.wx_shop.servicetest.entity
   mapper-locations: classpath:mapper/*.xml
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
 logging:
   level:
     com.wx_shop.servicetest.dao: debug

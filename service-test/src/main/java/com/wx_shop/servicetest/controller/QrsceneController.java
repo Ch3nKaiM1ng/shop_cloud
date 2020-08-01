@@ -46,7 +46,13 @@ public class QrsceneController {
     List<Qrscene> dataList =service.queryAll(entity);
         return re.SUCCESSOBJ(dataList);
     }
-    
+
+    @RequestMapping("queryAllTest")
+    public Map<String, Object> queryAllTest(@RequestBody Qrscene entity) {
+        List<Qrscene> dataList =service.queryAllTest(entity);
+        return re.SUCCESSOBJ(dataList);
+    }
+
     @RequestMapping("updateObj")
     public Map<String, Object> updateObj(@RequestBody Qrscene entity) {
         service.update(entity);

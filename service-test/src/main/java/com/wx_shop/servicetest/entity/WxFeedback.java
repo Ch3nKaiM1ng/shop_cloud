@@ -31,6 +31,8 @@ public class WxFeedback implements Serializable {
     private Integer meatTime;
     //就诊项目
     private String meatProject;
+    //姓名
+    private String name;
     //反馈类型
     private String feedbackType;
     //问题描述
@@ -50,6 +52,14 @@ public class WxFeedback implements Serializable {
     private Date ctime;
     //1正常
     private String status;
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
 
     public String getMeatProject() {
         return meatProject;

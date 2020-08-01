@@ -51,6 +51,10 @@ public class QrsceneServiceImpl implements QrsceneService {
     public List<Qrscene> queryAll(Qrscene qrscene) {
         return this.qrsceneDao.queryAll(qrscene);
     }
+    @Override
+    public List<Qrscene> queryAllTest(Qrscene qrscene) {
+        return this.qrsceneDao.queryAllTest(qrscene);
+    }
     /**
      * 新增数据
      *

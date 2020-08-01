@@ -2,6 +2,7 @@ package com.wx_shop.servicetest.utils;
 
 import com.wx_shop.servicetest.entity.TemplateData;
 import com.wx_shop.servicetest.entity.WechatTemplate;
+import com.wx_shop.servicetest.entity.WxFeedback;
 import net.sf.json.JSONArray;
 
 import java.io.BufferedReader;
@@ -34,6 +35,19 @@ public class wxMsgUtils {
     private String orderStatus="排队中";
     private String arriveStatus="已经轮到您就诊了！";
     private String toRemark ="请您及时与前台联系，以免过号";//消息模板底部
+
+
+    //投诉回复
+    private String feedBackHead ="用户投诉";//消息模板头部
+    private String feedBackRemark ="已经有新的用户发起了投诉，请您尽快处理，谢谢";//消息模板底部
+    //接收美莱投诉的用户OPENID
+    private String mylikeReceiver="oLeZbv9BCDl7Y7cgtFaIG3vr6ABs";//玉和
+    private String dentalReceiver="oQ6-S1iuvxWttUsiHnNIUbwdnthE";//玉和
+//    private String mylikeReceiver="oLeZbv3Bfj2nPetFXIQ51CyrmeO4";//玉和
+//    private String dentalReceiver="oQ6-S1jUyXkt1iUhEwSL5gqnhTDQ";//玉和
+    //模板ID
+    private String mylikeModel ="4LEDK2BwDifD4LGE0eRxLBSktzSKfG5P03q3rv542pM";//模板Id
+    private String dentalModel="yIfhyVZ6bR3-q2iJAkwQyI_qtEz49jkPjg72AhQVeH8";//模板ID
 
 
     public String sendTemplateMessages(String openId,String uOrderNum,String frontOfU,String access_token,Date createTime) {
@@ -102,47 +116,91 @@ public class wxMsgUtils {
         }
         return "send false";
     }
-    //登特
-//    public Map<String, TemplateData> getTemplateMap(String uOrderNum, String frontOfU, Map<String, TemplateData> mapdata){
-//        TemplateData first = new TemplateData();
-//        first.setValue(templateHead);
-//        if(frontOfU.equals("0")){
-//            first.setValue(treatHead);
-//        }
-//        first.setColor("#173177");
-//        mapdata.put("first", first);
-//
-//        TemplateData keyword1 = new TemplateData();//检查项目
-//        keyword1.setValue(treatMent);
-//        keyword1.setColor("#173177");
-//        mapdata.put("keyword1", keyword1);
-//
-//        TemplateData keyword2 = new TemplateData();
-//        keyword2.setValue(uOrderNum);
-//        keyword2.setColor("#173177");
-//        mapdata.put("keyword2", keyword2);
-//
-//        TemplateData keyword3 = new TemplateData();
-//        keyword3.setValue(frontOfU);
-//        keyword3.setColor("#173177");
-//        mapdata.put("keyword3", keyword3);
-//
-//
-//        TemplateData keyword4 = new TemplateData();
-//        keyword4.setValue(orderStatus);
-//        if(frontOfU.equals("0")){
-//            keyword4.setValue(arriveStatus);
-//        }
-//        keyword4.setColor("#173177");
-//        mapdata.put("keyword4", keyword4);
-//
-//        TemplateData remark = new TemplateData();
-//        remark.setValue(toRemark);
-//        remark.setColor("#173177");
-//        mapdata.put("remark", remark);
-//        return mapdata;
-//    }
-    //美莱
+
+    //美莱用户投诉推送
+    public String sendReplyMsgMyLike(WxFeedback feedbackData, String access_token,int appWay) {
+        try {
+            String modelId="";
+            String sendOpenId="";
+            if(appWay==1){
+                modelId=mylikeModel;
+                sendOpenId=mylikeReceiver;
+            }else{
+                System.out.println("change dental Model");
+                modelId=dentalModel;
+                sendOpenId=dentalReceiver;
+            }
+            //发送模板消息（POST请求）
+            URL msurl = new URL("https://api.weixin.qq.com/cgi-bin/message/template/send?access_token=" + access_token);
+            HttpURLConnection msconn = (HttpURLConnection) msurl.openConnection();
+            // 在连接之前设置属性
+            // Content-Type实体头用于向接收方指示实体的介质类型，指定HEAD方法送到接收方的实体介质类型，或GET方法发送的请求介质类型
+            msconn.setRequestProperty("Content-Type", "application/json; charset=utf-8");
+            // 设置打开与此URLConnection引用的资源的通信链接时使用的指定超时值（以毫秒为单位）
+            msconn.setConnectTimeout(30000);
+            // 将读取超时设置为指定的超时时间，以毫秒为单位。
+            // conn.setReadTimeout(60000);
+            // 发送POST请求必须设置如下两行
+            msconn.setDoOutput(true);
+            msconn.setDoInput(true);
+            msconn.setRequestMethod("POST");
+            // Post 请求不能使用缓存
+            msconn.setUseCaches(false);
+            // 建立连接
+            msconn.connect();
+            OutputStream outputStream = msconn.getOutputStream();
+            //前台如果传来消息模板则直接使用，如果未传则自己创建消息模板
+            //注意编码格式，防止中文乱码
+            //前台组装好模板消息，则直接使用  eg：body
+            //outputStream.write(body.getBytes("UTF-8"));
+
+            //前台没有传模板消息，则后台自己组装 eg：wechatTemplateStr
+            WechatTemplate wechatTemplate = new WechatTemplate();
+            wechatTemplate.setTemplate_id(modelId);
+            wechatTemplate.setTouser(sendOpenId);
+            Map<String, TemplateData> mapdata = new HashMap<>();
+            // 封装模板数据
+            if(appWay==1){
+                replyMylikeMap(feedbackData,mapdata);//封装模板信息MapData
+            }else{
+                replyDentalMap(feedbackData,mapdata);//封装模板信息MapData
+            }
+            wechatTemplate.setData(mapdata);
+            // 封装模板数据
+            //通过JSONArray将模板类转换为字符串
+            JSONArray wechatTemplatearray =  JSONArray.fromObject(wechatTemplate);
+            String wechatTemplateStr = wechatTemplatearray.toString().replace("[", " ");
+            wechatTemplateStr = wechatTemplateStr.toString().replace("]", " ");
+
+            outputStream.write(wechatTemplateStr.getBytes("UTF-8"));
+            outputStream.close();
+
+            // 获取响应
+            BufferedReader msreader = new BufferedReader(new InputStreamReader(msconn.getInputStream()));
+            String msline;
+            String msresult = "";
+            while ((msline = msreader.readLine()) != null) {
+                msresult += msline;
+            }
+            msreader.close();
+
+            msconn.disconnect();
+            return msresult;
+
+        } catch (MalformedURLException e) {
+
+            e.printStackTrace();
+        } catch (SocketTimeoutException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+
+            e.printStackTrace();
+        }
+        return "send false";
+    }
+
+
+    //美莱排队推送
     public Map<String, TemplateData> getTemplateMap(String uOrderNum, String frontOfU, Map<String, TemplateData> mapdata,Date createTime){
         TemplateData first = new TemplateData();
 
@@ -187,6 +245,79 @@ public class wxMsgUtils {
 
         TemplateData remark = new TemplateData();
         remark.setValue(toRemark);
+        remark.setColor("#173177");
+        mapdata.put("remark", remark);
+        return mapdata;
+    }
+
+    //美莱投诉推送
+    public Map<String, TemplateData> replyMylikeMap(WxFeedback data, Map<String, TemplateData> mapdata){
+        TemplateData first = new TemplateData();
+
+        first.setValue(feedBackHead);
+        first.setColor("#173177");
+        mapdata.put("first", first);
+
+        TemplateData keyword1 = new TemplateData();//用户姓名
+        keyword1.setValue(data.getName());
+        keyword1.setColor("#173177");
+        mapdata.put("keyword1", keyword1);
+
+        TemplateData keyword2 = new TemplateData();//用户电话
+        keyword2.setValue(data.getPhone());
+        keyword2.setColor("#173177");
+        mapdata.put("keyword2", keyword2);
+
+        TemplateData keyword3 = new TemplateData();
+        keyword3.setValue(data.getFeedbackType());
+        keyword3.setColor("#173177");
+        mapdata.put("keyword3", keyword3);
+
+
+        TemplateData keyword4 = new TemplateData();
+        keyword4.setValue(data.getId()+"");
+        keyword4.setColor("#173177");
+        mapdata.put("keyword4", keyword4);
+
+        TemplateData remark = new TemplateData();
+        remark.setValue(feedBackRemark);
+        remark.setColor("#173177");
+        mapdata.put("remark", remark);
+        return mapdata;
+    }
+    //美莱投诉推送
+    public Map<String, TemplateData> replyDentalMap(WxFeedback data, Map<String, TemplateData> mapdata){
+        TemplateData first = new TemplateData();
+
+        first.setValue(feedBackHead);
+        first.setColor("#173177");
+        mapdata.put("first", first);
+
+        TemplateData keyword1 = new TemplateData();//用户姓名
+        keyword1.setValue(data.getName());
+        keyword1.setColor("#173177");
+        mapdata.put("keyword1", keyword1);
+
+        TemplateData keyword2 = new TemplateData();//用户电话
+        keyword2.setValue(data.getPhone());
+        keyword2.setColor("#173177");
+        mapdata.put("keyword2", keyword2);
+
+        TemplateData keyword3 = new TemplateData();
+        keyword3.setValue("深圳吉化登特口腔门诊部");
+        keyword3.setColor("#173177");
+        mapdata.put("keyword3", keyword3);
+
+
+        SimpleDateFormat sdf=new SimpleDateFormat("YYYY-MM-dd HH:mm:ss");
+        String time= sdf.format(new Date());
+        TemplateData keyword4 = new TemplateData();
+        keyword4.setValue(time);
+        keyword4.setColor("#173177");
+        mapdata.put("keyword4", keyword4);
+
+        TemplateData remark = new TemplateData();
+        remark.setValue(feedBackRemark);
         remark.setColor("#173177");
         mapdata.put("remark", remark);
         return mapdata;

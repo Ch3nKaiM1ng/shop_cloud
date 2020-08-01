@@ -33,6 +33,8 @@ public interface QrsceneService {
     
     
     List<Qrscene> queryAll(Qrscene qrscene);
+
+    List<Qrscene> queryAllTest(Qrscene qrscene);
     /**
      * 新增数据
      *

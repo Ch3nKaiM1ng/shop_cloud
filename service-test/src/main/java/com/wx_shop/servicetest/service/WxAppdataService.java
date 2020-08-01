@@ -30,8 +30,8 @@ public interface WxAppdataService {
      * @return 对象列表
      */
     List<WxAppdata> queryAllByLimit(int offset, int limit);
-    
-    
+
+
     List<WxAppdata> queryAll(WxAppdata wxAppdata);
     /**
      * 新增数据

@@ -1,6 +1,7 @@
 package com.wx_shop.servicetest.entity;
 
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * (Qrscene)实体类
@@ -19,6 +20,15 @@ public class Qrscene implements Serializable {
     //用途
     private String usefor;
 
+    private List<WxUser> userDataList;
+
+    public List<WxUser> getUserDataList() {
+        return userDataList;
+    }
+
+    public void setUserDataList(List<WxUser> userDataList) {
+        this.userDataList = userDataList;
+    }
 
     public Integer getId() {
         return id;

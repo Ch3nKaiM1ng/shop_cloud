@@ -34,7 +34,9 @@ public interface QrsceneDao {
     List<Qrscene> queryAllByLimit(@Param("offset") int offset, @Param("limit") int limit);
 
     List<Qrscene> queryAll(Qrscene qrscene);
-   
+
+    List<Qrscene> queryAllTest(Qrscene qrscene);
+
     /**
      * 新增数据
      *

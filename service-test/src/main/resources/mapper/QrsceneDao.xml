@@ -9,6 +9,34 @@
         <result property="usefor" column="usefor" jdbcType="VARCHAR"/>
     </resultMap>
 
+    <resultMap type="com.wx_shop.servicetest.entity.Qrscene" id="testQrCollection">
+        <result property="id" column="id" jdbcType="INTEGER"/>
+        <result property="ticket" column="ticket" jdbcType="VARCHAR"/>
+        <result property="scene" column="scene" jdbcType="VARCHAR"/>
+        <result property="usefor" column="usefor" jdbcType="VARCHAR"/>
+        <collection property="userDataList" column="id" ofType="com.wx_shop.servicetest.entity.WxUser">
+            <id property="userId" column="user_id" jdbcType="INTEGER"/>
+            <result property="introducerId" column="introducer_id" jdbcType="INTEGER"/>
+            <result property="shopId" column="shop_id" jdbcType="INTEGER"/>
+            <result property="nickName" column="nick_name" jdbcType="VARCHAR"/>
+            <result property="avatarUrl" column="avatar_url" jdbcType="VARCHAR"/>
+            <result property="city" column="city" jdbcType="VARCHAR"/>
+            <result property="province" column="province" jdbcType="VARCHAR"/>
+            <result property="country" column="country" jdbcType="VARCHAR"/>
+            <result property="phone" column="phone" jdbcType="VARCHAR"/>
+            <result property="openid" column="openid" jdbcType="VARCHAR"/>
+            <result property="gender" column="gender" jdbcType="VARCHAR"/>
+            <result property="ctime" column="ctime" jdbcType="TIMESTAMP"/>
+        </collection>
+    </resultMap>
+
+    <!--查询测试-->
+    <select id="queryAllTest" resultMap="testQrCollection">
+        select a.* ,b.*
+        from qrscene a,wx_user b
+        where b.introducer_id=a.id
+    </select>
+
     <!--查询单个-->
     <select id="queryById" resultMap="QrsceneMap">
         select
