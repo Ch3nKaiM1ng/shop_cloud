@@ -4,8 +4,10 @@ package com.wx_shop.serviceshop.controller;
 
 import com.alibaba.fastjson.JSON;
 import com.sun.org.apache.xalan.internal.xsltc.compiler.util.ErrorMsg;
+import com.wx_shop.serviceshop.entity.UserAddress;
 import com.wx_shop.serviceshop.entity.WxAccesstoken;
 import com.wx_shop.serviceshop.entity.WxAppdata;
+import com.wx_shop.serviceshop.service.UserAddressService;
 import com.wx_shop.serviceshop.service.WxAccesstokenService;
 import com.wx_shop.serviceshop.service.WxAppdataService;
 import com.wx_shop.serviceshop.utils.*;
@@ -55,6 +57,9 @@ public class WxUserController {
 
     @Resource
     private WxAccesstokenService wxAccesstokenService;
+
+    @Resource
+    private UserAddressService userAddressService;
 
     @Autowired
     private RestTemplate restTemplate;
@@ -277,6 +282,16 @@ public class WxUserController {
                     service.insert(wxuser);
                     wxuser.setCtime(new Date());
                     jsonObject.put("userInfo",wxuser);
+                    //给用户添加默认地址
+                    UserAddress userAddress=new UserAddress();
+                    userAddress.setAddress("深圳吉华登特口腔门诊部");
+                    userAddress.setAddressDetail("门诊部");
+                    userAddress.setReceiver("前台咨询");
+                    userAddress.setPhone("17722666902");
+                    userAddress.setIsUse(1);
+                    userAddress.setSex(0);
+                    userAddress.setUserId(wxuser.getUserId());
+                    userAddressService.insert(userAddress);
 //                    wxuser.setAvatarUrl(userInfo.getString("avatarUrl"));
 //                    wxuser.setCity(userInfo.getString("city"));
 //                    wxuser.setCountry(userInfo.getString("country"));

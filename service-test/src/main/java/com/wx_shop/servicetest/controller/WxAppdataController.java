@@ -44,8 +44,14 @@ public class WxAppdataController {
 
 
     @RequestMapping("updateObj")
+    @Transactional
     public Map<String, Object> updateObj(@RequestBody WxAppdata entity) {
-        service.update(entity);
+        try {
+            service.update(entity);
+            int i=1/0;
+        }catch (Exception e){
+            e.printStackTrace();
+        }
         if(entity.getId() != null){
         return re.SUCCESS();
         }else{
@@ -65,7 +71,6 @@ public class WxAppdataController {
 
 
     @RequestMapping("findAll")
-    @Transactional
     public Map<String, Object> findAll(@RequestBody WxAppdata entity) {
         List<WxAppdata> dataList =service.queryAll(entity);
 

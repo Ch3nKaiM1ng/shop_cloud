@@ -20,6 +20,8 @@
         <result property="ctime" column="ctime" jdbcType="TIMESTAMP"/>
         <association property="subOrder"  select="com.wx_shop.serviceshop.dao.SubOrderDao.queryByMainId" column="main_order_id">
         </association>
+        <association property="userData"  select="com.wx_shop.serviceshop.dao.WxUserDao.queryById" column="user_id">
+        </association>
     </resultMap>
 
     <!--查询单个-->

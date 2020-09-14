@@ -41,8 +41,8 @@ public class wxMsgUtils {
     private String feedBackHead ="用户投诉";//消息模板头部
     private String feedBackRemark ="已经有新的用户发起了投诉，请您尽快处理，谢谢";//消息模板底部
     //接收美莱投诉的用户OPENID
-    private String mylikeReceiver="oLeZbv9BCDl7Y7cgtFaIG3vr6ABs";//玉和
-    private String dentalReceiver="oQ6-S1iuvxWttUsiHnNIUbwdnthE";//玉和
+    private String mylikeReceiver="oLeZbvyQxSKmW0XVoVpxNAXQtEpQ";//玉和
+    private String dentalReceiver="oQ6-S1r5RWd3vH4TqIlgHuezm5eM";//玉和
 //    private String mylikeReceiver="oLeZbv3Bfj2nPetFXIQ51CyrmeO4";//玉和
 //    private String dentalReceiver="oQ6-S1jUyXkt1iUhEwSL5gqnhTDQ";//玉和
     //模板ID

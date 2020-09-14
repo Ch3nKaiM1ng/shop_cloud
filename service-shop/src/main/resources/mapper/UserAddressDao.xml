@@ -103,7 +103,7 @@
     <!--新增所有列-->
     <insert id="insert" keyProperty="addressId" useGeneratedKeys="true">
         insert into wx_shop.user_address(user_id, address, receiver, phone, ctime, is_use,sex,addressDetail)
-        values (#{userId}, #{address}, #{receiver}, #{phone}, now(), 0,#{sex},#{addressDetail})
+        values (#{userId}, #{address}, #{receiver}, #{phone}, now(), #{isUse},#{sex},#{addressDetail})
     </insert>
 
     <!--通过主键修改数据-->

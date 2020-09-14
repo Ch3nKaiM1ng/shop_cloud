@@ -44,6 +44,23 @@ public class MainOrder implements Serializable {
     private String evaluate;
     private Double totalPrice;
 
+    //创建时间
+    @DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(
+            pattern = "yyyy-MM-dd HH:mm:ss",
+            timezone = "GMT+8"
+    )
+    private Date ctime;
+
+    private List<SubOrder> subOrder;
+
+    //当前页
+    private int offset;
+    //显示数量
+    private int limit;
+
+    private WxUser userData;
+
     String openId;
 
     public String getReceive() {
@@ -61,21 +78,13 @@ public class MainOrder implements Serializable {
     public void setOrderCode(String orderCode) {
         this.orderCode = orderCode;
     }
+    public WxUser getUserData() {
+        return userData;
+    }
 
-    //创建时间
-    @DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
-    @JsonFormat(
-            pattern = "yyyy-MM-dd HH:mm:ss",
-            timezone = "GMT+8"
-    )
-    private Date ctime;
-
-    private List<SubOrder> subOrder;
-
-    //当前页
-    private int offset;
-    //显示数量
-    private int limit;
+    public void setUserData(WxUser userData) {
+        this.userData = userData;
+    }
 
     public String getOpenId() {
         return openId;

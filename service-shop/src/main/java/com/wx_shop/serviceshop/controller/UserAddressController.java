@@ -63,6 +63,7 @@ public class UserAddressController {
     }
     @RequestMapping("addObj")
     public Map<String, Object> addObj(@RequestBody UserAddress entity) {
+        entity.setIsUse(0);
         service.insert(entity);
         if(entity.getAddressId() != null){
         return re.SUCCESS();

@@ -1,12 +1,11 @@
 package com.wx_shop.servicetest.utils;
 
-import com.wx_shop.servicetest.controller.SignController;
+import com.wx_shop.servicetest.config.WxMappingJackson2HttpMessageConverter;
 import com.wx_shop.servicetest.entity.WxAccesstoken;
 import com.wx_shop.servicetest.entity.WxAppdata;
 import com.wx_shop.servicetest.entity.WxUser;
 import com.wx_shop.servicetest.service.WxAccesstokenService;
 import com.wx_shop.servicetest.service.WxAppdataService;
-import com.wx_shop.servicetest.service.WxOrderService;
 import com.wx_shop.servicetest.service.WxUserService;
 import net.sf.json.JSONObject;
 import org.slf4j.Logger;
@@ -80,6 +79,19 @@ public class AccessTokenUtils {
             return result;
         }
     }
+    public JSONObject getCodeAccessToken(int id,String code){
+        System.out.println("111111111111");
+        String result="";
+        WxAppdata appdata=new WxAppdata();
+        appdata.setId(id);
+        appdata=accessTokenUtils.wxAppdataService.queryObj(appdata);//调用数据库查找相应的商家微信数据
+        String appid=appdata.getAppid();//appid
+        String appsecret=appdata.getAppsecret();//appsecret
+        log.info("Jedis get accesstoken  Fail ");
+        JSONObject rs=getCodeToken(appid,appsecret,code);
+        JSONObject data=rs.getJSONObject("data");
+        return data;
+    }
 
     private boolean checkExpireTime(Date ctime){
         Date now=new Date();
@@ -94,6 +106,16 @@ public class AccessTokenUtils {
         String url="https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid="+appid+"&secret="+appsecret;
         JSONObject jsonRs=accessTokenUtils.restTemplate.getForObject(url, JSONObject.class);
         return jsonRs;
+    }
+
+    private JSONObject getCodeToken(String appid,String appsecret,String code){
+        /**************封装调用获取session_key******************/
+        restTemplate.getMessageConverters().add(new WxMappingJackson2HttpMessageConverter());
+        String url="https://api.weixin.qq.com/sns/oauth2/access_token?appid="+appid+"&secret="+appsecret+"&code="+code+"&grant_type=authorization_code";
+        JSONObject jsonRs=accessTokenUtils.restTemplate.getForObject(url, JSONObject.class);
+        JSONObject data=new JSONObject();
+        data.put("data",jsonRs);
+        return data;
     }
 
     public boolean checkUserData(String accesstoken,String openid){

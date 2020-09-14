@@ -28,6 +28,20 @@ spring:
     #      stat-view-servlet:
     #       login-username: admin
     #       login-password: admin
+  redis:
+      database: 0
+      host: 47.107.47.13
+      port: 6379
+      password:
+      jedis:
+        pool:
+          max-wait: 10000
+          max-active: 1024
+          max-idle: 200
+          min-idle: 0
+      timeout: 10000
+
+
 eureka:
   client:
     serviceUrl:
@@ -40,3 +54,4 @@ mybatis:
 logging:
   level:
     com.wx_shop.servicetest.dao: debug
+
